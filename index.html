@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>水电费计算器</title>
+    <style type="text/css">
+        canvas {
+            margin: 30px auto 0px auto;
+            display: block;
+            text-align: center;
+            -webkit-border-radius: 5px;
+            border: 1px solid grey;
+            box-shadow: 0px 0px 5px grey;
+        }
+
+        #main {
+            font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
+            color: #666;
+            /*width: 500px;*/
+            /*height: 500px;*/
+            margin: 30px auto 0px auto;
+            /*border: 1px solid grey;*/
+            /*box-shadow: 0px 0px 5px grey;*/
+        }
+
+        .section {
+            /*display: inline-block;*/
+            margin: 0px auto 0px auto;
+            width: 1200px;
+            border: 1px solid grey;
+            margin-bottom: 10px;
+            padding: 10px 20px;
+            box-shadow: 0px 0px 5px grey;
+        }
+
+        .sectionHeader {
+            font-weight: 700;
+            font-size: 20px;
+            color: #666;
+        }
+
+        .sectionList {
+            display: block;
+            list-style-type: decimal;
+            list-style-position: outside;
+            margin: 0px 0px 20px 0px;
+            padding-left: 15px;
+        }
+        input {
+            border: 0px solid grey;
+        }
+        li {
+            line-height: 35px;
+            padding-left: 5px;
+        }
+
+        .buttonAdd {
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: block;
+            margin: 0px auto 0px auto;
+            /*line-height: 50px;*/
+            color: rgb(64, 256, 64);
+            background-color: transparent;
+            -webkit-border-radius: 50%;
+            box-shadow: none;
+            border: 1px solid grey;
+            padding: 0px;
+            -webkit-box-shadow: 0px 0px 1px grey;
+            /*line-height: 40px;*/
+        }
+        .buttonGenerate {
+            cursor: pointer;
+            width: 80px;
+            height: 30px;
+            display: block;
+            margin: 0px auto 0px auto;
+            /*line-height: 50px;*/
+            color: rgba(256, 256, 256, 0.9);
+            background-color: #449d44;
+            -webkit-border-radius: 2px;
+            font-size: 15px;
+            box-shadow: none;
+            border: 1px solid #398439;
+            padding: 0px;
+            -webkit-box-shadow: 0px 0px 1px #398439;
+            /*line-height: 40px;*/
+        }
+        .spanAdd {
+            margin: 0px;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 40px;
+            font-size: 40px;
+        }
+
+        .icon {
+          display: inline-block;
+          width: 1.5em;
+          height: 1.5em;
+          stroke-width: 0;
+          color: rgba(64, 64, 64, 0.6);
+          stroke: currentColor;
+          fill: currentColor;
+        }
+        .icon-plus {
+            width: 1.5em;
+            height: 1.5em;
+        }
+        .icon-plus:hover {
+          width: 1.8em;
+          height: 1.8em;
+        }
+
+        .icon-power {
+            width: 0.9em;
+            height: 0.9em;
+        }
+        .icon-droplet {
+            width: 0.9em;
+            height: 0.9em;
+        }
+        .icon-users {
+          width: 0.9em;
+          height: 0.9em;
+        }
+        .icon-file-text {
+          width: 0.9em;
+          height: 0.9em;
+        }
+        .icon-plus-outline {
+          width: 0.9em;
+          height: 0.9em;
+        }
+        .money {
+            padding-left: 10px;
+            font-size: 13px;
+            margin-right: 2px;
+        }
+        .selectInput {
+            padding: 0px;
+            height: 20px;
+            max-width: 60px;
+            font-size: 11px;
+            background-color: transparent;
+            border: 0px solid grey;
+        }
+        .shadow {
+            -webkit-box-shadow: 0px 0px 1px grey;
+        }
+        .nameInput {
+            padding: 0px 5px;
+            /*margin-right: 5px;*/
+            height: 20px;
+            max-width: 60px;
+        }
+        .monthInputFirst {
+            padding: 0px 5px;
+            height: 20px;
+            max-width: 135px;
+            margin-left: 5px;
+            margin-right: 3px;
+            vertical-align: center;
+        }
+        .monthInputSecond {
+            padding: 0px 5px;
+            height: 20px;
+            max-width: 135px;
+            margin-left: 3px;
+            margin-right: 5px;
+            vertical-align: center;
+        }
+
+        .dateInputFirst {
+            padding: 0px 5px;
+            height: 20px;
+            max-width: 115px;
+            margin-left: 5px;
+            margin-right: 3px;
+            vertical-align: center;
+        }
+        .dateInputSecond {
+            padding: 0px 5px;
+            height: 20px;
+            max-width: 115px;
+            margin-left: 3px;
+            margin-right: 5px;
+            vertical-align: center;
+        }
+
+        .numberInput {
+            padding: 0px 5px;
+            margin-right: 5px;
+            /*display: inline-block;*/
+            height: 20px;
+            max-width: 60px;
+
+        }
+        .deleteContainer {
+            /*margin-left: 10px;*/
+            float: right;
+            padding-right: 40px;
+            text-align: right;
+            width: 70px;
+            height: 100%;
+            display: inline-block;
+            /*background-color: grey;*/
+        }
+        .x {
+            color: red;
+            visibility: hidden;
+        }
+        .deleteContainer2 {
+            /*margin-left: 10px;*/
+            float: right;
+            padding-right: 40px;
+            text-align: right;
+            width: 180px;
+            height: 100%;
+            display: inline-block;
+            /*background-color: grey;*/
+        }
+        .delete {
+            display: inline-block;
+            width: 50px;
+            height: 20px;
+            /*margin-left: 30px;*/
+            text-decoration: underline;
+            cursor: pointer;
+            color: #d9534f;
+            border: 0px;
+            font-size: 14px;
+            background-color: transparent;
+            visibility: hidden;
+        }
+
+        #detailSection {
+            /*padding-bottom: 20px;*/
+            margin-bottom: 250px;
+        }
+        #summaryTable {
+            /*border: 1px solid grey;*/
+            border-spacing: 10px;
+            width: 100%;
+            margin: 0px 0px 30px 0px;
+            /*min-height: 100px;*/
+        }
+        #detailTable {
+            /*border: 1px solid grey;*/
+            border-spacing: 10px;
+            width: 100%;
+            margin: 0px 0px 30px 0px;
+            /*min-height: 100px;*/
+        }
+        tr {
+            /*background-color: grey;*/
+        }
+        th {
+            margin: 5px;
+            text-align: left;
+        }
+        td {
+            margin: 5px;
+            text-align: left;
+        }
+        button:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <svg display="none">
+        <defs>
+            <symbol id="icon-plus" viewBox="0 0 32 32">
+            <title>plus</title>
+            <path class="path1" d="M31 12h-11v-11c0-0.552-0.448-1-1-1h-6c-0.552 0-1 0.448-1 1v11h-11c-0.552 0-1 0.448-1 1v6c0 0.552 0.448 1 1 1h11v11c0 0.552 0.448 1 1 1h6c0.552 0 1-0.448 1-1v-11h11c0.552 0 1-0.448 1-1v-6c0-0.552-0.448-1-1-1z"></path>
+            </symbol>
+        </defs>
+    </svg>
+    <svg display="none">
+        <defs>
+            <symbol id="icon-power" viewBox="0 0 32 32">
+            <title>power</title>
+            <path class="path1" d="M12 0l-12 16h12l-8 16 28-20h-16l12-12z"></path>
+            </symbol>
+        <defs>
+    </svg>
+    <svg display="none">
+        <defs>
+            <symbol id="icon-droplet" viewBox="0 0 32 32">
+            <title>droplet</title>
+            <path class="path1" d="M27.020 14.786c-2.055-5.732-6.41-10.88-11.020-14.786-4.61 3.907-8.965 9.054-11.020 14.786-1.271 3.545-1.396 7.393 0.393 10.794 2.058 3.911 6.207 6.42 10.626 6.42s8.569-2.509 10.626-6.42c1.79-3.401 1.664-7.249 0.393-10.794zM23.086 23.717c-1.369 2.602-4.15 4.283-7.086 4.283-1.723 0-3.391-0.579-4.753-1.583 0.414 0.054 0.832 0.083 1.254 0.083 3.67 0 7.146-2.1 8.856-5.351 1.402-2.665 1.281-5.433 0.746-7.636 0.455 0.88 0.841 1.756 1.151 2.623 0.706 1.971 1.251 4.886-0.168 7.581z"></path>
+            </symbol>
+        <defs>
+    </svg>
+    <svg display="none">
+        <defs>
+            <symbol id="icon-users" viewBox="0 0 36 32">
+            <title>users</title>
+            <path class="path1" d="M24 24.082v-1.649c2.203-1.241 4-4.337 4-7.432 0-4.971 0-9-6-9s-6 4.029-6 9c0 3.096 1.797 6.191 4 7.432v1.649c-6.784 0.555-12 3.888-12 7.918h28c0-4.030-5.216-7.364-12-7.918z"></path>
+            <path class="path2" d="M10.225 24.854c1.728-1.13 3.877-1.989 6.243-2.513-0.47-0.556-0.897-1.176-1.265-1.844-0.95-1.726-1.453-3.627-1.453-5.497 0-2.689 0-5.228 0.956-7.305 0.928-2.016 2.598-3.265 4.976-3.734-0.529-2.39-1.936-3.961-5.682-3.961-6 0-6 4.029-6 9 0 3.096 1.797 6.191 4 7.432v1.649c-6.784 0.555-12 3.888-12 7.918h8.719c0.454-0.403 0.956-0.787 1.506-1.146z"></path>
+            </symbol>
+        </defs>
+    </svg>
+    <svg display="none">
+        <defs>
+            <symbol id="icon-file-text" viewBox="0 0 32 32">
+            <title>file-text</title>
+            <path class="path1" d="M27 0h-24c-1.65 0-3 1.35-3 3v26c0 1.65 1.35 3 3 3h24c1.65 0 3-1.35 3-3v-26c0-1.65-1.35-3-3-3zM26 28h-22v-24h22v24zM8 14h14v2h-14zM8 18h14v2h-14zM8 22h14v2h-14zM8 10h14v2h-14z"></path>
+            </symbol>
+        </defs>
+    </svg>
+    <svg display="none">
+        <defs>
+            <symbol id="icon-plus-outline" viewBox="0 0 24 24">
+            <title>plus-outline</title>
+            <path class="path1" d="M12 21c-1.654 0-3-1.346-3-3l0.053-3.053-3.035 0.053c-1.672 0-3.018-1.346-3.018-3s1.346-3 3-3l3.053-0.054-0.053-2.928c0-1.672 1.346-3.018 3-3.018s3 1.346 3 3l0.055 2.946 2.963 0.054c1.636 0 2.982 1.346 2.982 3s-1.346 3-3 3l-2.945-0.053-0.055 3.071c0 1.636-1.346 2.982-3 2.982zM11 13v5.018c0 0.533 0.449 0.982 1 0.982s1-0.449 1-1v-5h5.018c0.533 0 0.982-0.449 0.982-1s-0.449-1-1-1h-5v-5c0-0.569-0.449-1-1-1s-1 0.449-1 1v5h-5c-0.569 0-1 0.449-1 1s0.449 1 1 1h5z"></path>
+            </symbol>
+        </defs>
+    </svg>
+    <div id="main">
+        <section id="billSection" class="section">
+            <h2 class="sectionHeader">水电账单 <svg class="icon icon-droplet"><use xlink:href="#icon-droplet"></use></svg><svg class="icon icon-power"><use xlink:href="#icon-power"></use></svg>
+        </h2>
+            <ol id="billList" class="sectionList">
+                <!-- <li class="billItem">
+                    <select class="selectInput shadow">
+                      <option value="water">水费</option>
+                      <option value="electricity">电费</option>
+                    </select>
+                    <input type="month" class="monthInputFirst shadow">
+                    <span>-</span>
+                    <input type="month" class="monthInputSecond shadow">
+                    <span class="money">¥</span>
+                    <input type="number" class="numberInput shadow" placeholder="0">
+                    <div class="deleteContainer">
+                        <button class="delete" visibility="hidden">删除</button>
+                    </div>
+                </li> -->
+            </ol>
+            <div class="add">
+                <button class="buttonAdd">
+                    <svg class="icon icon-plus"><use xlink:href="#icon-plus"></use></svg>
+                </button>
+            </div>
+        </section>
+
+        <section id="renterSection" class="section">
+            <h2 class="sectionHeader">入住情况 <svg class="icon icon-users"><use xlink:href="#icon-users"></use></svg></h2>
+            <ol id="renterList" class="sectionList">
+                <!-- <li class="renterItem">
+                    <input type="text" class="nameInput shadow" placeholder="张三">
+                    <input type="date" class="dateInput shadow">
+                    <span>-</span>
+                    <input type="date" class="dateInput shadow">
+                    <div class="deleteContainer2">
+                        <button class="delete" visibility="hidden">删除</button>
+                    </div>
+                </li> -->
+            </ol>
+            <div class="add">
+                <button class="buttonAdd">
+                    <svg class="icon icon-plus"><use xlink:href="#icon-plus"></use></svg>
+                </button>
+            </div>
+        </section>
+
+        <section id="detailSection" class="section">
+            <h2 class="sectionHeader">费用分摊  <svg class="icon icon-file-text"><use xlink:href="#icon-file-text"></use></svg></h2>
+            <table id="summaryTable" class="shadow">
+                <tbody>
+                    <tr>
+                        <th>姓名</th>
+                        <th>入住天数</th>
+                        <th>水费</th>
+                        <th>电费</th>
+                        <th>总计</th>
+                    </tr>
+                    <tr>
+                        <td>张三</td>
+                        <td>0天</td>
+                        <td>0元</td>
+                        <td>0元</td>
+                        <td>0元</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table id="detailTable" class="shadow">
+                <tbody>
+                </tbody>
+            </table>
+            <table></table>
+            <div class="generate">
+                <button class="buttonGenerate">生成明细</button>
+            </div>
+        </section>
+   <!--      <svg class="icon icon-power"><use xlink:href="#icon-power"></use></svg>
+        <svg class="icon icon-droplet"><use xlink:href="#icon-droplet"></use></svg>
+        <svg class="icon icon-users"><use xlink:href="#icon-users"></use></svg>
+        <svg class="icon icon-file-text"><use xlink:href="#icon-file-text"></use></svg> -->
+        <!-- <svg class="icon icon-plus-outline"><use xlink:href="#icon-plus-outline"></use></svg> -->
+    </div>
+    <!-- <script type="text/javascript" src="main.js"></script> -->
+    <script>
+        var app = {};
+        (function(exports) {
+
+            function start() {
+                initBill();
+                initRenter();
+                initDetail();
+                // debugger;
+            }
+
+            function initBill() {
+                var bill = app.bill = {};
+                bill.section = document.getElementById("billSection");
+                bill.list = document.getElementById("billList");
+
+                var defaultBillItem = createBillItem();
+                addItemToList(bill.list, defaultBillItem);
+
+                // var date = new Date();
+                // date.setFullYear(2016);
+                // date.setMonth(11);
+                // date.setDate(1);
+                // date.setHours(0);
+                // date.setMinutes(0);
+                // date.setSeconds(0);
+                // defaultBillItem.getElementsByClassName("monthInputFirst")[0].value = date;
+                // console.log(date);
+
+                var buttonAdd = bill.section.getElementsByClassName("buttonAdd")[0];
+                buttonAdd.onclick = function() {
+                    addItemToList(bill.list, createBillItem());
+                }
+            }
+
+            function createBillItem() {
+                var item = document.createElement("li");
+                item.calssName = "billItem";
+                item.innerHTML = '' +
+                '<input type="month" class="monthInputFirst shadow">' +
+                '<span>-</span>' +
+                '<input type="month" class="monthInputSecond shadow">' +
+                '<span class="money">¥</span>' +
+                '<input type="number" class="numberInput shadow waterInput" placeholder="水费">' +
+                '<span class="money">¥</span>' +
+                '<input type="number" class="numberInput shadow electricityInputFirst" placeholder="首月电费">' +
+                '<span class="money">¥</span>' +
+                '<input type="number" class="numberInput shadow electricityInputSecond" placeholder="次月电费">' +
+                '<span class="x">×</span>' +
+                '<div class="deleteContainer">' +
+                '<button class="delete">删除</button>' +
+                '</div>';
+
+                var deleteBtnContainer = item.getElementsByClassName("deleteContainer")[0];
+                var button = deleteBtnContainer.getElementsByClassName("delete")[0];
+                deleteBtnContainer.onmouseenter = function(event) {
+                    button.style.visibility = "visible";
+                }
+                deleteBtnContainer.onmouseleave = function(event) {
+                    button.style.visibility = "hidden";
+                }
+                button.onclick = function() {
+                    item.parentNode.removeChild(item);
+                }
+                return item;
+            }
+
+            function initRenter() {
+                var renter = app.renter = {};
+                renter.section = document.getElementById("renterSection");
+                renter.list = document.getElementById("renterList");
+
+                var defaultRenterItem = createRenterItem();
+                addItemToList(app.renter.list, defaultRenterItem);
+
+                var buttonAdd = renter.section.getElementsByClassName("buttonAdd")[0];
+                buttonAdd.onclick = function() {
+                    addItemToList(renter.list, createRenterItem());
+                }
+            }
+
+            function createRenterItem() {
+                var item = document.createElement("li");
+                item.className = "renterItem";
+                item.innerHTML = '' +
+                '<input type="text" class="nameInput shadow" placeholder="张三">' +
+                '<input type="date" class="dateInputFirst shadow">' +
+                '<span>-</span>' +
+                '<input type="date" class="dateInputSecond shadow">' +
+                '<span class="x">×</span>' +
+                '<div class="deleteContainer2">' +
+                '<button class="delete">删除</button>' +
+                '</div>';
+
+                var deleteBtnContainer = item.getElementsByClassName("deleteContainer2")[0];
+                var button = deleteBtnContainer.getElementsByClassName("delete")[0];
+                deleteBtnContainer.onmouseenter = function(event) {
+                    button.style.visibility = "visible";
+                }
+                deleteBtnContainer.onmouseleave = function(event) {
+                    button.style.visibility = "hidden";
+                }
+                button.onclick = function() {
+                    item.parentNode.removeChild(item);
+                }
+                return item;
+            }
+
+            function initDetail() {
+                var detail = app.detail = {};
+                detail.section = document.getElementById("detailSection");
+                detail.summaryTable = document.getElementById("summaryTable").children[0];
+                detail.detailTable = document.getElementById("detailTable").children[0];
+
+                var buttonGenerate = detail.section.getElementsByClassName("buttonGenerate")[0];
+                buttonGenerate.onclick = function() {
+                    console.log("go!");
+                    go();
+                }
+            }
+
+            function go() {
+                var billDatas = getBillDatas();
+                var renterDatas = getRenterDatas();
+                var data = calculate(billDatas, renterDatas);
+                if (data) {
+                    fillSummaryTable(data.summaryDatas);
+                    fillDetailTable(billDatas, data.detailDatas);
+                }
+            }
+
+            function fillDetailTable(billDatas, detailDatas) {
+                var table = app.detail.detailTable;
+                table.innerHTML = "";
+                var head = getDetailTableHead(billDatas);
+                table.appendChild(head);
+
+                var isLast;
+                var rows
+                for (var i = 0; i < detailDatas.length; i++) {
+                    if (i === detailDatas.length - 1) {
+                        isLast = true;
+                    } else {
+                        isLast = false;
+                    }
+                    rows = getDetailTableRows(billDatas, detailDatas[i], isLast);
+                    for (var j = 0; j < rows.length; j++) {
+                        table.appendChild(rows[j]);
+                    }
+                }
+
+            }
+
+            function getDetailTableRows(billDatas, detailData, isLast) {
+                var costRow = document.createElement("tr");
+                var costHTML = "<td></td><td>总费用</td>";
+                var waterRow = document.createElement("tr");
+                var waterHTML = "<td></td><td>水费</td>";
+                var firstRow = document.createElement("tr");
+                var firstHTML = "<td></td><td>首月电费</td>";
+                var secondRow = document.createElement("tr");
+                var secondHTML = "<td></td><td>次月电费</td>";
+                var dayRow = document.createElement("tr");
+                var dayHTML = "<td>" + detailData.name + "</td><td>入住天数</td>";
+                var firstDayRow = document.createElement("tr");
+                var firstDayHTML = "<td></td><td>首月天数</td>";
+                var secondDayRow = document.createElement("tr");
+                var secondDayHTML = "<td></td><td>次月天数</td>";
+
+                var detail,
+                    cost,
+                    waterCost,
+                    firstCost,
+                    secondCost,
+                    dayCount;
+                var costTotal = 0;
+                    waterCostTotal = 0,
+                    firstCostTotal = 0,
+                    secondCostTotal = 0;
+                    dayCountTotal = 0,
+                    firstDayCountTotal = 0,
+                    secondDayCountTotal = 0;
+                for (var i = 0; i < billDatas.length; i++) {
+                    cost = 0;
+                    detail = detailData[i];
+                    if (!detail) {
+                        costHTML += "<td></td>";
+                        waterHTML += "<td></td>";
+                        firstHTML += "<td></td>";
+                        secondHTML += "<td></td>";
+                        dayHTML += "<td></td>";
+                        firstDayHTML += "<td></td>";
+                        secondDayHTML += "<td></td>";
+                    } else {
+                        if (detail.waterCost) {
+                            waterCost = detail.waterCost;
+                            waterCostTotal += detail.waterCost;
+                            cost += waterCost;
+                        } else {
+                            waterCost = 0;
+                        }
+                        if (detail && detail.electricityCostFirst) {
+                            firstCost = detail.electricityCostFirst;
+                            firstCostTotal += detail.electricityCostFirst;
+                            cost += firstCost;
+                        } else {
+                            firstCost = 0;
+                        }
+                        if (detail && detail.electricityCostSecond) {
+                            secondCost = detail.electricityCostSecond;
+                            secondCostTotal += detail.electricityCostSecond;
+                            cost += secondCost;
+                        } else {
+                            secondCost = 0;
+                        }
+                        if (detail && detail.dayCount) {
+                            dayCount = detail.dayCount;
+                            dayCountTotal += detail.dayCount;
+                        } else {
+                            dayCount = 0;
+                        }
+                        if (detail && detail.firstDayCount) {
+                            firstDayCount = detail.firstDayCount;
+                            firstDayCountTotal += detail.firstDayCount;
+                        } else {
+                            firstDayCount = 0;
+                        }
+                        if (detail && detail.secondDayCount) {
+                            secondDayCount = detail.secondDayCount;
+                            secondDayCountTotal += detail.secondDayCount;
+                        } else {
+                            secondDayCount = 0;
+                        }
+                        costTotal += cost;
+                        costHTML += "<td>" + cost.toFixed(2) + "元</td>";
+                        waterHTML += "<td>" + waterCost.toFixed(2) + "元</td>";
+                        firstHTML += "<td>" + firstCost.toFixed(2) + "元</td>";
+                        secondHTML += "<td>" + secondCost.toFixed(2) + "元</td>";
+                        dayHTML += "<td>" + dayCount + "天</td>";
+                        firstDayHTML += "<td>" + firstDayCount + "天</td>";
+                        secondDayHTML += "<td>" + secondDayCount + "天</td>";
+                    }
+                }
+                costHTML += "<td>" + costTotal.toFixed(2) + "元</td>";
+                waterHTML += "<td>" + waterCostTotal.toFixed(2) + "元</td>";
+                firstHTML += "<td>" + firstCostTotal.toFixed(2) + "元</td>";
+                secondHTML += "<td>" + secondCostTotal.toFixed(2) + "元</td>";
+                dayHTML += "<td>" + dayCountTotal + "天</td>";
+                firstDayHTML += "<td>" + firstDayCountTotal + "天</td>";
+                secondDayHTML += "<td>" + secondDayCountTotal + "天</td>";
+
+                waterRow.innerHTML = waterHTML;
+                firstRow.innerHTML = firstHTML;
+                secondRow.innerHTML = secondHTML;
+                dayRow.innerHTML = dayHTML;
+                firstDayRow.innerHTML = firstDayHTML;
+                secondDayRow.innerHTML = secondDayHTML;
+                costRow.innerHTML = costHTML;
+
+                var rows = [
+                    dayRow,
+                    waterRow,
+                    firstDayRow,
+                    firstRow,
+                    secondDayRow,
+                    secondRow,
+                    costRow,
+                ];
+
+                if (!isLast) {
+                    var emptyRow = document.createElement("tr");
+                    rows.push(emptyRow);
+                }
+                return rows;
+            }
+
+            function getDetailTableHead(detailDatas) {
+                var tr = document.createElement("tr");
+                var innerHTML = '<th></th><th></th>';
+                var data;
+                for (var i = 0; i< detailDatas.length; i++) {
+                    data = detailDatas[i];
+                    innerHTML += '<th>' + data.firstMonth + '、' + data.secondMonth + '月</th>';
+                }
+                innerHTML += '<th>总计</th>';
+                tr.innerHTML = innerHTML;
+                return tr;
+            }
+
+            function fillSummaryTable(summaryDatas) {
+                adjustSummaryTableRows(summaryDatas.length);
+
+                var rows = app.detail.summaryTable.children;
+                for (var i = 1; i < rows.length; i++) {
+                    fillSummaryRow(rows[i], summaryDatas[i - 1]);
+                }
+            }
+
+            function fillSummaryRow(row, data) {
+                data.waterCost = data.waterCost.toFixed(2);
+                data.electricityCost = data.electricityCost.toFixed(2);
+                data.totalCost = data.totalCost.toFixed(2);
+                row.cells[0].innerText = "" + data.name;
+                row.cells[1].innerText = "" + data.dayCount + "天";
+                row.cells[2].innerText = "" + data.waterCost + "元";
+                row.cells[3].innerText = "" + data.electricityCost + "元";
+                row.cells[4].innerText = "" + data.totalCost + "元";
+            }
+
+            function adjustSummaryTableRows(length) {
+                var table = app.detail.summaryTable;
+                var rows = table.children;
+                var rowCount = rows.length - 1;
+                if (length > rowCount) {
+                    var tr;
+                    for (var i = 0; i < length - rowCount; i++) {
+                        tr = document.createElement("tr");
+                        tr.innerHTML = "" +
+                        '<td></td>' +
+                        '<td></td>' +
+                        '<td></td>' +
+                        '<td></td>' +
+                        '<td></td>';
+                        table.appendChild(tr);
+                    }
+                } else if (length < rowCount) {
+                    for (var i = rowCount; rows.length - 1 > length; i--) {
+                        table.removeChild(rows[i]);
+                    }
+                }
+            }
+
+            function addItemToList(list, item) {
+                list.appendChild(item);
+            }
+
+            function calculate(billDatas, renterDatas) {
+                if (!billDatas.length || !renterDatas.length) {
+                    return null;
+                }
+
+                var summaryDatas = [];
+                var detailDatas = [];
+                var renterData;
+                for (var i = 0; i < renterDatas.length; i++) {
+                    renterData = renterDatas[i];
+                    summaryDatas.push({
+                        name: renterData.name,
+                        dayCount: (renterData.end - renterData.start) / (1000 * 24 * 3600),
+                        waterCost: 0,
+                        electricityCost: 0,
+                        totalCost: 0,
+                    });
+
+                    detailDatas.push({
+                        name: renterData.name
+                    });
+                }
+
+                var billData,
+                    start,
+                    middle,
+                    end,
+                    waterCost,
+                    electricityCostFirst,
+                    electricityCostSecond,
+                    totalDayCount,
+                    dayCount,
+                    dayCounts,
+                    firstDayCounts,
+                    secondDayCounts,
+                    summaryData,
+                    detailData;
+                for (var i = 0; i < billDatas.length; i++) {
+                    billData = billDatas[i];
+                    start = billData.start;
+                    middle = billData.middle;
+                    end = billData.end;
+                    totalDayCount = 0;
+                    totalDayCountFirst = 0;
+                    totalDayCountSecond = 0;
+                    dayCounts = {};
+                    firstDayCounts = {};
+                    secondDayCounts = {};
+                    for (var j = 0; j < renterDatas.length; j++) {
+                        renterData = renterDatas[j];
+                        if (!(renterData.start >= end) && !(renterData.end <= start)) {
+                            // console.log(Math.min(renterData.end, end));
+                            // console.log(Math.max(renterData.start, start));
+                            dayCounts[j] = (Math.min(renterData.end, end) - Math.max(renterData.start, start)) / (1000 * 24 * 3600);
+                            totalDayCount += dayCounts[j];
+
+                            if (!(renterData.start >= middle)) {
+                                firstDayCounts[j] = (Math.min(renterData.end, middle) - Math.max(renterData.start, start)) / (1000 * 24 * 3600);
+                                totalDayCountFirst += firstDayCounts[j];
+                            }
+
+                            if (!(renterData.end <= middle)) {
+                                secondDayCounts[j] = (Math.min(renterData.end, end) - Math.max(renterData.start, middle)) / (1000 * 24 * 3600);
+                                totalDayCountSecond += secondDayCounts[j];
+                            }
+                        }
+                    }
+
+                    for (var p in dayCounts) {
+                        dayCount = dayCounts[p];
+                        waterCost = (dayCount / totalDayCount) * billData.waterCost;
+
+                        summaryData = summaryDatas[Number(p)];
+                        summaryData.totalCost += waterCost;
+                        summaryData.waterCost += waterCost;
+
+                        detailData = detailDatas[Number(p)];
+                        if (!detailData[i]) {
+                            detailData[i] = {};
+                        }
+                        detailData[i].waterCost = waterCost;
+                        detailData[i].dayCount = dayCount;
+                    }
+
+                    for (var p in firstDayCounts) {
+                        firstDayCount = firstDayCounts[p];
+                        electricityCostFirst = (firstDayCount / totalDayCountFirst) * billData.electricityCostFirst;
+
+                        summaryData = summaryDatas[Number(p)];
+                        summaryData.totalCost += electricityCostFirst;
+                        summaryData.electricityCost += electricityCostFirst;
+
+                        detailData = detailDatas[Number(p)];
+                        if (!detailData[i]) {
+                            detailData[i] = {};
+                        }
+                        detailData[i].electricityCostFirst = electricityCostFirst;
+                        detailData[i].firstDayCount = firstDayCount;
+                    }
+
+                    for (var p in secondDayCounts) {
+                        secondDayCount = secondDayCounts[p];
+                        electricityCostSecond = (secondDayCount / totalDayCountSecond) * billData.electricityCostSecond;
+
+                        summaryData = summaryDatas[Number(p)];
+                        summaryData.totalCost += electricityCostSecond;
+                        summaryData.electricityCost += electricityCostSecond;
+
+                        detailData = detailDatas[Number(p)];
+                        if (!detailData[i]) {
+                            detailData[i] = {};
+                        }
+                        detailData[i].electricityCostSecond = electricityCostSecond;
+                        detailData[i].secondDayCount = secondDayCount;
+                    }
+                }
+                return {
+                    summaryDatas: summaryDatas,
+                    detailDatas: detailDatas
+                };
+            }
+
+            function getBillDatas() {
+                var datas = [];
+
+                var list = app.bill.list;
+                var items = list.children;
+                var itemData;
+                for (var i = 0; i < items.length; i++) {
+                    itemData = getDataFromBillItem(items[i]);
+                    if (itemData) {
+                        datas.push(itemData);
+                    }
+                }
+
+                datas.sort(function(a, b) {
+                    return a.start - b.start;
+                })
+
+                return datas;
+            }
+            function getDataFromBillItem(item) {
+                var data = {};
+
+                data.start = item.getElementsByClassName("monthInputFirst")[0].valueAsDate;
+                data.end = item.getElementsByClassName("monthInputSecond")[0].valueAsDate;
+                data.waterCost = item.getElementsByClassName("waterInput")[0].value;
+                data.electricityCostFirst = item.getElementsByClassName("electricityInputFirst")[0].value;
+                data.electricityCostSecond = item.getElementsByClassName("electricityInputSecond")[0].value;
+
+                if (!data.start || !data.end || data.start >= data.end || (!data.waterCost && data.waterCost !== 0) ||
+                    (!data.electricityCostFirst && data.electricityCostFirst !== 0) ||
+                    (!data.electricityCostSecond && data.electricityCostSecond !== 0))
+                {
+                    item.style.outline = "red solid thin";
+                    item.getElementsByClassName("x")[0].style.visibility = "visible";
+                    // debugger;
+                    return null;
+                } else {
+                    data.middle = new Date(data.start.getTime());
+                    data.middle.setMonth(data.start.getMonth() + 1);
+                    data.firstMonth = data.start.getMonth() + 1;
+                    data.secondMonth = data.firstMonth + 1 > 12 ? 1 : data.firstMonth + 1;
+                    item.style.outline = "none";
+                    item.getElementsByClassName("x")[0].style.visibility = "hidden";
+                    return data;
+                }
+            }
+            function getRenterDatas() {
+                var datas = [];
+
+                var list = app.renter.list;
+                var items = list.children;
+                var itemData;
+                for (var i = 0; i < items.length; i++) {
+                    itemData = getDataFromRenterItem(items[i]);
+                    if (itemData) {
+                        datas.push(itemData);
+                    }
+                }
+
+                return datas;
+            }
+            function getDataFromRenterItem(item) {
+                var data = {};
+                data.name = item.getElementsByClassName("nameInput")[0].value;
+                data.start = item.getElementsByClassName("dateInputFirst")[0].valueAsDate;
+                data.end = item.getElementsByClassName("dateInputSecond")[0].valueAsDate;
+
+                if (!data.name || !data.start || !data.end || data.start >= data.end) {
+                    item.style.outline = "red solid thin";
+                    item.getElementsByClassName("x")[0].style.visibility = "visible";
+                    return null;
+                } else {
+                    item.style.outline = "none";
+                    item.getElementsByClassName("x")[0].style.visibility = "hidden";
+
+                    data.name = data.name.trim();
+                    return data;
+                }
+            }
+            exports.start = start;
+        }(app))
+    </script>
+    <script type="text/javascript">
+        window.onload = function() {
+            console.log("Here be dragon!");
+            app.start();
+        }
+    </script>
+</body>
